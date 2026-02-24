@@ -1,0 +1,28 @@
+import { MCQuestion, CodeChallenge } from '@/types';
+
+export const cat10MCQ: MCQuestion[] = [
+  { id: 'MCQ_127', category: 'collections', difficulty: 'Easy', type: 'multiple_choice', question: 'Apa perbedaan ketiga tipe collection di PL/SQL?', options: ['Tidak ada perbedaan', 'Associative array=index by, Nested table=unbounded, VARRAY=fixed max size', 'VARRAY paling fleksibel', 'Nested table=fixed, VARRAY=dynamic'], correctAnswer: 1, explanation: 'Associative array (INDEX BY): key-value pairs, sparse. Nested table: dinamis, bisa disimpan di DB. VARRAY: punya maximum size tetap saat deklarasi.', tags: ['types', 'comparison'] },
+  { id: 'MCQ_128', category: 'collections', difficulty: 'Easy', type: 'multiple_choice', question: 'Collection mana yang bersifat unbounded (tidak ada batas size)?', options: ['VARRAY', 'Associative array dan nested table', 'Hanya associative array', 'Semua collection'], correctAnswer: 1, explanation: 'Associative array dan nested table tidak memiliki batas ukuran maksimum. VARRAY harus mendefinisikan maximum size saat deklarasi (bisa EXTEND sampai max).', tags: ['unbounded', 'size'] },
+  { id: 'MCQ_129', category: 'collections', difficulty: 'Medium', type: 'multiple_choice', question: 'Bagaimana cara declare associative array?', options: ['TYPE t IS TABLE OF NUMBER;', 'TYPE t IS TABLE OF NUMBER INDEX BY PLS_INTEGER;', 'TYPE t IS VARRAY(10) OF NUMBER;', 'ARRAY t OF NUMBER;'], correctAnswer: 1, explanation: 'Syntax: TYPE type_name IS TABLE OF element_type INDEX BY index_type; Contoh: TYPE t_arr IS TABLE OF VARCHAR2(50) INDEX BY PLS_INTEGER;', tags: ['associative-array', 'syntax'] },
+  { id: 'MCQ_130', category: 'collections', difficulty: 'Medium', type: 'multiple_choice', question: 'Apa fungsi EXTEND method pada collection?', options: ['Memperpanjang string', 'Menambah elemen kosong (NULL) ke akhir collection', 'Memperluas scope collection', 'Menggandakan collection'], correctAnswer: 1, explanation: 'EXTEND menambah satu atau lebih elemen NULL ke akhir nested table atau VARRAY. Syntax: coll.EXTEND; atau coll.EXTEND(n); Associative array tidak perlu EXTEND.', tags: ['extend', 'method'] },
+  { id: 'MCQ_131', category: 'collections', difficulty: 'Medium', type: 'multiple_choice', question: 'Apa keuntungan BULK COLLECT?', options: ['Membuat tabel bulk', 'Mengurangi context switch antara PL/SQL dan SQL engine', 'Mengompres data', 'Mengurangi ukuran tabel'], correctAnswer: 1, explanation: 'BULK COLLECT mengambil banyak baris sekaligus ke collection, mengurangi context switch antara PL/SQL engine dan SQL engine yang terjadi pada fetch satu-per-satu. Peningkatan performa signifikan.', tags: ['bulk-collect', 'performance'] },
+  { id: 'MCQ_132', category: 'collections', difficulty: 'Hard', type: 'multiple_choice', question: 'Apa fungsi FORALL statement?', options: ['Looping biasa', 'Mengirim multiple DML statement dari collection sebagai satu batch ke SQL engine', 'Format ALL collection', 'Iterate seluruh elements'], correctAnswer: 1, explanation: 'FORALL mengirim semua DML (INSERT/UPDATE/DELETE) yang menggunakan collection elements sebagai satu batch ke SQL engine, mengurangi context switches dan meningkatkan performa signifikan.', tags: ['forall', 'bulk-dml'] },
+  { id: 'MCQ_133', category: 'collections', difficulty: 'Easy', type: 'multiple_choice', question: 'Bagaimana cara check apakah element exists di collection?', options: ['coll.HAS(i)', 'coll.EXISTS(i)', 'coll.CONTAINS(i)', 'IF coll(i) IS NOT NULL'], correctAnswer: 1, explanation: 'Method EXISTS(i) return TRUE jika element di index i ada. Ini penting untuk associative array yang sparse (index bisa tidak berurutan). Syntax: IF coll.EXISTS(5) THEN ...', tags: ['exists', 'method'] },
+  { id: 'MCQ_134', category: 'collections', difficulty: 'Medium', type: 'multiple_choice', question: 'Bagaimana cara delete element dari collection?', options: ['coll.REMOVE(i)', 'coll.DELETE(i)', 'REMOVE coll(i)', 'coll(i) := NULL sama saja'], correctAnswer: 1, explanation: 'coll.DELETE(i) menghapus element di index i. coll.DELETE tanpa parameter menghapus semua. coll.DELETE(i,j) menghapus range. Setelah delete, EXISTS(i) return FALSE.', tags: ['delete', 'method'] },
+];
+
+export const cat10Code: CodeChallenge[] = [
+  {
+    id: 'CODE_037',
+    category: 'collections',
+    difficulty: 'Easy',
+    type: 'code_challenge',
+    question: 'Declare associative array tipe INDEX BY PLS_INTEGER, populate 5 nama mahasiswa, lalu iterasi dan tampilkan semua.',
+    requirements: ['TYPE t_names IS TABLE OF VARCHAR2(50) INDEX BY PLS_INTEGER', 'Populate dengan 5 nama', 'Gunakan FIRST dan NEXT untuk iterate', 'Tampilkan semua dengan DBMS_OUTPUT'],
+    starterCode: 'DECLARE\n  TYPE t_names IS TABLE OF VARCHAR2(50) INDEX BY PLS_INTEGER;\n  v_names t_names;\n  v_idx PLS_INTEGER;\nBEGIN\n  -- Populate\n\n  -- Iterate\n\nEND;\n/',
+    solution: 'DECLARE\n  TYPE t_names IS TABLE OF VARCHAR2(50) INDEX BY PLS_INTEGER;\n  v_names t_names;\n  v_idx PLS_INTEGER;\nBEGIN\n  v_names(1) := \'Budi\';\n  v_names(2) := \'Ani\';\n  v_names(3) := \'Citra\';\n  v_names(4) := \'Dodi\';\n  v_names(5) := \'Eka\';\n  \n  v_idx := v_names.FIRST;\n  WHILE v_idx IS NOT NULL LOOP\n    DBMS_OUTPUT.PUT_LINE(v_idx || \': \' || v_names(v_idx));\n    v_idx := v_names.NEXT(v_idx);\n  END LOOP;\nEND;\n/',
+    hints: ['Assign: arr(index) := value;', 'FIRST returns index pertama', 'NEXT(i) returns index setelah i, NULL jika tidak ada'],
+    validationRules: { mustContain: ['TYPE', 'TABLE', 'INDEX BY', 'FIRST', 'NEXT', 'LOOP', 'DBMS_OUTPUT.PUT_LINE'], structure: 'anonymous_block' },
+    tags: ['associative-array', 'iterate'],
+  },
+];
