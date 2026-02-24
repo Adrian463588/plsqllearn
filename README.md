@@ -2,10 +2,17 @@
 
 > Platform web interaktif untuk belajar PL/SQL Oracle dengan 289+ soal latihan, materi terstruktur dari catatan kelas, dan tracking progress otomatis.
 
-![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black?style=for-the-badge&logo=nextdotjs)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwindcss)
-![Framer Motion](https://img.shields.io/badge/Framer_Motion-12-FF0055?style=for-the-badge&logo=framer)
+<p align="center">
+  <a href="https://plsqllearn.edgeone.dev/"><img src="https://img.shields.io/badge/🌐_Live_Demo-plsqllearn.edgeone.dev-blue?style=for-the-badge" alt="Live Demo" /></a>
+  <a href="https://github.com/Adrian463588/plsqllearn"><img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github" alt="GitHub" /></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-16.1.6-black?style=flat-square&logo=nextdotjs" alt="Next.js" />
+  <img src="https://img.shields.io/badge/TypeScript-5-blue?style=flat-square&logo=typescript" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=flat-square&logo=tailwindcss" alt="Tailwind" />
+  <img src="https://img.shields.io/badge/Framer_Motion-12-FF0055?style=flat-square&logo=framer" alt="Framer Motion" />
+</p>
 
 ---
 
