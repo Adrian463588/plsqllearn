@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { Suspense, useState, useMemo, useCallback, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft, ChevronRight, CheckCircle2, XCircle,
-  Bookmark, BookmarkCheck, Lightbulb, ArrowRight,
+  Bookmark, BookmarkCheck, Lightbulb, ArrowRight, ArrowLeft,
   Filter, RotateCcw
 } from 'lucide-react';
 import { CATEGORIES } from '@/data/categories';
@@ -14,14 +15,19 @@ import { useProgress } from '@/hooks/useProgress';
 import { validateMCQ } from '@/utils/validation';
 import { isBookmarked as checkBookmark } from '@/utils/storage';
 
-export default function MCQPage() {
+function MCQInner() {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get('category') as CategoryId | null;
   const allMCQ = useMemo(() => getAllMCQ(), []);
   const { progress, submitAnswer, toggleBookmark } = useProgress();
 
-  // Filters
-  const [selectedCats, setSelectedCats] = useState<CategoryId[]>([]);
+  // Filters — pre-select from URL param
+  const [selectedCats, setSelectedCats] = useState<CategoryId[]>(
+    categoryParam ? [categoryParam] : []
+  );
   const [selectedDiff, setSelectedDiff] = useState<Difficulty[]>([]);
   const [showFilter, setShowFilter] = useState(false);
+  const activeCat = CATEGORIES.find(c => c.id === categoryParam);
 
   // Quiz state
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -110,7 +116,12 @@ export default function MCQPage() {
       {/* Top bar */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold">Pilihan Ganda</h1>
+          {activeCat && (
+            <a href={`/belajar/${activeCat.id}`} className="flex items-center gap-1 text-xs text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors mb-1">
+              <ArrowLeft className="w-3 h-3" /> Kembali ke {activeCat.name}
+            </a>
+          )}
+          <h1 className="text-xl font-bold">Pilihan Ganda{activeCat ? ` — ${activeCat.name}` : ''}</h1>
           <p className="text-sm text-[var(--text-secondary)]">Soal {currentIdx + 1} dari {total}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -342,5 +353,13 @@ export default function MCQPage() {
         </motion.div>
       </AnimatePresence>
     </div>
+  );
+}
+
+export default function MCQPage() {
+  return (
+    <Suspense fallback={<div className="max-w-4xl mx-auto px-4 py-20 text-center"><p>Memuat soal...</p></div>}>
+      <MCQInner />
+    </Suspense>
   );
 }

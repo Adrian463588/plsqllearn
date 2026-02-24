@@ -1,20 +1,28 @@
 'use client';
 
-import { useState, useMemo, useCallback } from 'react';
+import { Suspense, useState, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ChevronLeft, ChevronRight, Lightbulb, Eye, EyeOff,
-  CheckCircle2, XCircle, RotateCcw, Code2, Play
+  CheckCircle2, XCircle, RotateCcw, Code2, Play, ArrowLeft
 } from 'lucide-react';
 import { getAllCodeChallenges } from '@/data/questions';
 import { CATEGORIES } from '@/data/categories';
-import { CodeChallenge, Difficulty } from '@/types';
+import { CodeChallenge, Difficulty, CategoryId } from '@/types';
 import { useProgress } from '@/hooks/useProgress';
 import { validateCode } from '@/utils/validation';
 
-export default function CodeChallengePage() {
-  const allCode = useMemo(() => getAllCodeChallenges(), []);
+function CodeChallengeInner() {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get('category') as CategoryId | null;
+  const allCodeRaw = useMemo(() => getAllCodeChallenges(), []);
+  const allCode = useMemo(() => {
+    if (categoryParam) return allCodeRaw.filter(q => q.category === categoryParam);
+    return allCodeRaw;
+  }, [allCodeRaw, categoryParam]);
   const { submitAnswer } = useProgress();
+  const activeCat = CATEGORIES.find(c => c.id === categoryParam);
 
   const [currentIdx, setCurrentIdx] = useState(0);
   const [code, setCode] = useState(allCode[0]?.starterCode || '');
@@ -81,7 +89,12 @@ export default function CodeChallengePage() {
       {/* Top bar */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-xl font-bold">Code Challenge</h1>
+          {activeCat && (
+            <a href={`/belajar/${activeCat.id}`} className="flex items-center gap-1 text-xs text-[var(--text-muted)] hover:text-[var(--primary)] transition-colors mb-1">
+              <ArrowLeft className="w-3 h-3" /> Kembali ke {activeCat.name}
+            </a>
+          )}
+          <h1 className="text-xl font-bold">Code Challenge{activeCat ? ` — ${activeCat.name}` : ''}</h1>
           <p className="text-sm text-[var(--text-secondary)]">Soal {currentIdx + 1} dari {total}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -282,5 +295,13 @@ export default function CodeChallengePage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function CodeChallengePage() {
+  return (
+    <Suspense fallback={<div className="max-w-7xl mx-auto px-4 py-20 text-center"><p>Memuat soal...</p></div>}>
+      <CodeChallengeInner />
+    </Suspense>
   );
 }

@@ -267,7 +267,7 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
         className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10"
       >
         <Link
-          href="/latihan/mcq"
+          href={`/latihan/mcq?category=${cat.id}`}
           className="flex items-center justify-between p-5 rounded-xl border border-[var(--border)] bg-[var(--background)] hover:border-[var(--primary)]/30 hover:shadow-lg transition-all group"
         >
           <div className="flex items-center gap-3">
@@ -283,7 +283,7 @@ export default function CategoryDetailPage({ params }: { params: Promise<{ categ
         </Link>
 
         <Link
-          href="/latihan/code"
+          href={`/latihan/code?category=${cat.id}`}
           className="flex items-center justify-between p-5 rounded-xl border border-[var(--border)] bg-[var(--background)] hover:border-violet-500/30 hover:shadow-lg transition-all group"
         >
           <div className="flex items-center gap-3">
